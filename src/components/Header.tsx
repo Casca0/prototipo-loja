@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import ShoppingCartLogo from '../assets/ShoppingCartLogo.tsx';
 import ShoppingBagLogo from '../assets/ShoppingBagLogo.tsx';
@@ -9,14 +9,14 @@ import { CartProduct, useCart } from '../provider.tsx';
 
 function Header() {
 	const [modal, setModal] = useState(false);
-	const { cart, setCart } = useCart();
+	const { cart, setCart, total, setTotal } = useCart();
 
-	useEffect(() => {
-		if (cart?.length === 1) {
-			setModal(true);
-			return;
-		}
-	}, [cart?.length]);
+	const currencyFormat = new Intl.NumberFormat('en-US', {
+		style: 'currency',
+		currency: 'BRL',
+	});
+
+	const cartTotal = total?.reduce((partialSum, a) => partialSum + a, 0);
 
 	return (
 		<div className='sticky top-0'>
@@ -35,7 +35,7 @@ function Header() {
 					<ShoppingCart
 						openModal={modal}
 						closeModal={() => setModal(false)}>
-						<div className='md:w-96 w-full h-full flex flex-col bg-light-purple absolute right-0 rounded-md p-4'>
+						<div className='md:w-96 w-full h-full flex flex-col bg-light-purple absolute right-0 rounded-md p-4 justify-between'>
 							<button
 								onClick={() => setModal(false)}
 								className='text-cream font-bold self-end'>
@@ -47,6 +47,9 @@ function Header() {
 										const tempArr = cart?.slice();
 										tempArr?.splice(index, 1);
 										setCart(tempArr!);
+										const totalArr = total?.slice();
+										totalArr?.splice(index, 1);
+										setTotal(totalArr);
 										if (tempArr!.length < 1) {
 											setModal(false);
 											return;
@@ -69,6 +72,10 @@ function Header() {
 									);
 								})}
 							</ul>
+							<div className='text-navy bg-pink text-center p-4 rounded-lg m-4'>
+								<h3 className='font-semibold'>Total</h3>
+								<p>{currencyFormat.format(cartTotal!)}</p>
+							</div>
 						</div>
 					</ShoppingCart>
 				</div>

@@ -1,7 +1,9 @@
-import { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface ShoppingCart {
 	cart: CartProduct[] | null;
+	total: number[] | undefined;
+	setTotal: React.Dispatch<React.SetStateAction<number[] | undefined>>;
 	setCart: React.Dispatch<React.SetStateAction<CartProduct[] | null>>;
 }
 
@@ -19,9 +21,10 @@ export default function CartProvider({
 	children: React.ReactNode;
 }) {
 	const [cart, setCart] = useState<CartProduct[] | null>([]);
+	const [total, setTotal] = useState<number[] | undefined>([]);
 
 	return (
-		<CartContext.Provider value={{ cart, setCart }}>
+		<CartContext.Provider value={{ cart, setCart, total, setTotal }}>
 			{children}
 		</CartContext.Provider>
 	);

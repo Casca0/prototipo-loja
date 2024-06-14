@@ -3,7 +3,7 @@ import { products } from '../assets/products.json';
 import { useCart } from '../provider';
 
 function Slider() {
-	const { cart, setCart } = useCart();
+	const { cart, setCart, total, setTotal } = useCart();
 
 	const currencyFormat = new Intl.NumberFormat('en-US', {
 		style: 'currency',
@@ -11,11 +11,12 @@ function Slider() {
 	});
 
 	const cartArr = cart?.slice();
+	const totalArr = total?.slice();
 
 	return (
 		<div className='text-center p-4 mb-4'>
 			<h1 className='font-bold text-cream text-3xl m-4'>MAIS VENDIDOS</h1>
-			<ul className='flex justify-evenly items-center md:w-auto w-72 overflow-auto'>
+			<ul className='flex justify-evenly items-center w-full overflow-auto'>
 				{products.map((product) => {
 					return (
 						<li
@@ -36,6 +37,8 @@ function Slider() {
 										quantity: 1,
 									});
 									setCart(cartArr!);
+									totalArr?.push(product.value);
+									setTotal(totalArr);
 								}}
 								className='bg-navy text-cream rounded-lg p-2'>
 								Comprar
